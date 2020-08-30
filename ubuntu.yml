@@ -4,10 +4,6 @@
   connection: local
   tasks:
 
-    # - name: Looking for the Ubuntu Version
-    #   command: lsb_release -cs 
-    #   register: distro
-  
     - name: Installing Linux Apps
       become: true
       apt:
