@@ -4,14 +4,16 @@
   connection: local
   tasks:
 
-    - name: Looking for the Ubuntu Version
-      command: lsb_release -cs 
-      register: distro
+    # - name: Looking for the Ubuntu Version
+    #   command: lsb_release -cs 
+    #   register: distro
   
     - name: Installing Linux Apps
       become: true
       apt:
         name: '{{ item }}'
+        install_recommends: yes
+        state: present
       loop:
           - vim
           - htop
@@ -31,6 +33,7 @@
           - flameshot
           - fonts-hack
           - tilix
+          - virtualbox
 
     - block:
       - name: Verify if Oh-My-zsh is installed
@@ -74,6 +77,14 @@
         become: true
         apt:
           name: google-chrome-stable
+
+    - block:
+      - name: Installing Vagrant 2.2.10
+        become: true
+        unarchive:
+          src: 'https://releases.hashicorp.com/vagrant/2.2.10/vagrant_2.2.10_linux_amd64.zip'
+          dest: /usr/local/bin
+          remote_src: yes
 
     - block:
       - name: Installing Terraform 0.12.19
@@ -162,7 +173,7 @@
       - name: Install Docker Repository
         become: true
         apt_repository:
-          repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ distro.stdout }} stable'
+          repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
           state: present
           filename: docker-ce
       - name: Install Docker
@@ -229,7 +240,7 @@
       - name: Install obsproject Ubuntu Repo
         become: true
         apt_repository:
-          repo: 'deb [arch=amd64] http://ppa.launchpad.net/obsproject/obs-studio/ubuntu focal main'
+          repo: 'deb [arch=amd64] http://ppa.launchpad.net/obsproject/obs-studio/ubuntu {{ ansible_distribution_release }} main'
           state: present
           filename: obsproject
       - name: Install obs Studio
