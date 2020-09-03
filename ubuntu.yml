@@ -217,7 +217,17 @@
           dest: /usr/local/bin/kubectl
           mode: 755
           remote_src: yes          
-  
+
+    - block:
+      - name: Adding Longsleep/Golang Backports Repository
+        become: true
+        apt_repository:
+          repo: 'ppa:longsleep/golang-backports'
+      - name: Install Golang 
+        become: true
+        apt:
+          name: golang-go
+          
 # OPTIONAL:
 #  - PEEK - Lightweight Screen Recorder that can export as GIF
 #  - OBS-STUDIO - Screen Recorder and Casting Software 
