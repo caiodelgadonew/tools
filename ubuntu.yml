@@ -35,6 +35,7 @@
       - name: Verify if Oh-My-zsh is installed
         command: test -d /home/{{ ansible_user }}/.oh-my-zsh
         register: ohmyzsh
+        ignore_errors: true
       - name: Installing Oh-My-zsh
         shell:
           cmd: 'curl -fsL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash'
@@ -246,9 +247,7 @@
       - name: Install obsproject Ubuntu Repo
         become: true
         apt_repository:
-          repo: 'deb [arch=amd64] http://ppa.launchpad.net/obsproject/obs-studio/ubuntu {{ ansible_distribution_release }} main'
-          state: present
-          filename: obsproject
+          repo: 'ppa:obsproject/obs-studio'
       - name: Install obs Studio
         become: true
         apt:
