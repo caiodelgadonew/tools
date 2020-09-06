@@ -30,6 +30,7 @@
           - fonts-hack
           - tilix
           - virtualbox
+          - timeshift
 
     - block:
       - name: Verify if Oh-My-zsh is installed
