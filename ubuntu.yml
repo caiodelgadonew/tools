@@ -32,6 +32,7 @@
           - virtualbox
           - timeshift
           - mlocate
+          - krita
 
     - block:
       - name: Verify if Oh-My-zsh is installed
