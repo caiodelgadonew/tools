@@ -31,6 +31,7 @@
           - tilix
           - virtualbox
           - timeshift
+          - mlocate
 
     - block:
       - name: Verify if Oh-My-zsh is installed
@@ -232,6 +233,7 @@
 #  - PEEK - Lightweight Screen Recorder that can export as GIF
 #  - OBS-STUDIO - Screen Recorder and Casting Software 
 #  - Brave Browser - Secure web browser
+#  - Ulauncher - Application Launcher
 
     - block:
       - name: Adding Peek Repository
@@ -269,3 +271,13 @@
         become: true
         apt:
           name: brave-browser
+
+    - block:
+      - name: Adding Ulauncher Repository
+        become: true
+        apt_repository:
+          repo: 'ppa:agornostal/ulauncher'
+      - name: Install Ulauncher
+        become: true
+        apt:
+          name: ulauncher
