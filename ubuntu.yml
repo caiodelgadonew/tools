@@ -176,9 +176,7 @@
       - name: Install Docker
         become: true
         apt:
-          name: '{{ item }}'
-        loop:
-          - docker-ce
+          name: docker-ce
       - name: Adding existing user to group Docker
         become: yes
         user: 
@@ -232,6 +230,7 @@
 # OPTIONAL:
 #  - PEEK - Lightweight Screen Recorder that can export as GIF
 #  - OBS-STUDIO - Screen Recorder and Casting Software 
+#  - Brave Browser - Secure web browser
 
     - block:
       - name: Adding Peek Repository
@@ -253,3 +252,19 @@
         apt:
           name: obs-studio
 
+    - block: 
+      - name: Install Brave Key
+        become: true
+        apt_key:
+          url: 'https://brave-browser-apt-release.s3.brave.com/brave-core.asc'
+          state: present
+      - name: Install Brave Repository
+        become: true
+        apt_repository:
+          repo: 'deb [arch=amd64] https://brave-browser-apt-release.s3.brave.com/ stable main'
+          state: present
+          filename: brave
+      - name: Install Brave Browser
+        become: true
+        apt:
+          name: brave-browser
