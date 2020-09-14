@@ -54,6 +54,16 @@
           path: /home/{{ ansible_user }}/.zshrc
           regexp: '^ZSH_THEME='
           line: 'ZSH_THEME="agnoster"'
+      - name: Creating ZSH Completion folder
+        file:
+          path: /home/{{ ansible_user }}/.oh-my-zsh/completions
+          state: directory
+          mode: 0755
+      - name: Adding autoload to compinit
+        lineinfile:
+          path: /home/{{ ansible_user }}/.zshrc
+          line: 'autoload -U compinit && compinit'
+          state: present
 
     - name: Installing AWS CLI via pip3
       become: true
@@ -219,7 +229,29 @@
           dest: /usr/local/bin/kubectl
           mode: 755
           remote_src: yes          
-
+      - name: Downloading Kubectx and Kubens 
+        become: true
+        git:
+          repo: 'https://github.com/ahmetb/kubectx'
+          dest: /opt/kubectx 
+      - name: Creating Symlink to kubectx and kubens 
+        become: true
+        file:
+          src: '/opt/kubectx/{{ item }}'
+          dest: '/usr/local/bin/{{ item }}'
+          state: link
+        with_items:
+          - kubectx
+          - kubens  
+      - name: Creating ZSH Completion  
+        file:
+          src: '/opt/kubectx/completion/{{ item }}'
+          dest: '/home/{{ ansible_user }}/.oh-my-zsh/completions/_{{ item }}'
+          state: link
+        with_items:
+          - kubectx.zsh
+          - kubens.zsh 
+          
     - block:
       - name: Adding Longsleep/Golang Backports Repository
         become: true
