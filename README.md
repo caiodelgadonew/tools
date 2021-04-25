@@ -12,11 +12,11 @@ ___
 
 1. Install Ansible
 ```bash
-sudo apt update && sudo apt install ansible -y
+sudo apt update && sudo apt install ansible unzip -y
 ```
 2. Clone this repository
 ```bash
-git clone git@github.com:caiodelgadonew/tools.git
+git clone https://github.com/caiodelgadonew/tools.git
 ```
 
 3. Apply the configuration
