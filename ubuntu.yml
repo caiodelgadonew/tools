@@ -33,6 +33,8 @@
           - timeshift
           - mlocate
           - krita
+          - jq
+          - mtr
 
     - block:
       - name: Verify if Oh-My-zsh is installed
@@ -89,26 +91,44 @@
           name: google-chrome-stable
 
     - block:
-      - name: Installing Vagrant 2.2.10
+      - name: Installing Vagrant 2.2.15
         become: true
         unarchive:
-          src: 'https://releases.hashicorp.com/vagrant/2.2.10/vagrant_2.2.10_linux_amd64.zip'
+          src: 'https://releases.hashicorp.com/vagrant/2.2.15/vagrant_2.2.15_linux_amd64.zipp'
           dest: /usr/local/bin
           remote_src: yes
 
     - block:
-      - name: Installing Terraform 0.12.19
+      - name: Installing Terraform 0.12.30
         become: true
         unarchive:
-          src: 'https://releases.hashicorp.com/terraform/0.12.29/terraform_0.12.29_linux_amd64.zip'
-          dest: /usr/local/bin
+          src: 'https://releases.hashicorp.com/terraform/0.12.30/terraform_0.12.30_linux_amd64.zip'
+          dest: /usr/local/bin/terraform12
+          remote_src: yes
+      - name: Installing Terraform 0.13.6
+        become: true
+        unarchive:
+          src: 'https://releases.hashicorp.com/terraform/0.13.6/terraform_0.13.6_linux_amd64.zip'
+          dest: /usr/local/bin/terraform13
+          remote_src: yes
+      - name: Installing Terraform 0.14.10
+        become: true
+        unarchive:
+          src: 'https://releases.hashicorp.com/terraform/0.14.10/terraform_0.14.10_linux_amd64.zip'
+          dest: /usr/local/bin/terraform14
+          remote_src: yes
+      - name: Installing Terraform 0.15.0
+        become: true
+        unarchive:
+          src: 'https://releases.hashicorp.com/terraform/0.15.0/terraform_0.15.0_linux_amd64.zip'
+          dest: /usr/local/bin/terraform15
           remote_src: yes
 
     - block:
-      - name: Installing Vault 1.5.0
+      - name: Installing Vault 1.7.1
         become: true
         unarchive:
-          src: 'https://releases.hashicorp.com/vault/1.5.0/vault_1.5.0_linux_amd64.zip'
+          src: 'https://releases.hashicorp.com/vault/1.7.1/vault_1.7.1_linux_amd64.zip'
           dest: /usr/local/bin
           remote_src: yes
 
@@ -175,6 +195,7 @@
           - hashicorp.terraform
           - gruntfuggly.todo-tree
           - njpwerner.autodocstring
+          - eamodio.gitlens
 
     - block: 
       - name: Install Docker Key
@@ -224,10 +245,10 @@
           line: 'plugins=(git docker docker-compose)'
         
     - block:
-      - name: Installing Kubectl 1.16.0
+      - name: Installing Kubectl 1.21.0
         become: true
         get_url:    
-          url: 'https://storage.googleapis.com/kubernetes-release/release/v1.16.0/bin/linux/amd64/kubectl'
+          url: 'https://dl.k8s.io/release/v1.21.0/bin/linux/amd64/kubectl'
           dest: /usr/local/bin/kubectl
           mode: 755
           remote_src: yes          
