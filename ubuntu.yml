@@ -30,7 +30,6 @@
           - fonts-hack
           - tilix
           - virtualbox
-          - timeshift
           - mlocate
           - krita
           - jq
@@ -38,7 +37,7 @@
 
     - block:
       - name: Verify if Oh-My-zsh is installed
-        command: test -d /home/{{ ansible_user }}/.oh-my-zsh
+        command: test -d /home/{{ ansible_user_id }}/.oh-my-zsh
         register: ohmyzsh
         ignore_errors: true
       - name: Installing Oh-My-zsh
@@ -49,21 +48,21 @@
       - name: Changing Default Shell to ZSH
         become: yes
         user: 
-          name: '{{ ansible_user }}'
+          name: '{{ ansible_user_id }}'
           shell: /bin/zsh 
       - name: Changing Default ZSH Theme to Agnoster
         lineinfile:
-          path: /home/{{ ansible_user }}/.zshrc
+          path: /home/{{ ansible_user_id }}/.zshrc
           regexp: '^ZSH_THEME='
           line: 'ZSH_THEME="agnoster"'
       - name: Creating ZSH Completion folder
         file:
-          path: /home/{{ ansible_user }}/.oh-my-zsh/completions
+          path: /home/{{ ansible_user_id }}/.oh-my-zsh/completions
           state: directory
           mode: 0755
       - name: Adding autoload to compinit
         lineinfile:
-          path: /home/{{ ansible_user }}/.zshrc
+          path: /home/{{ ansible_user_id }}/.zshrc
           line: 'autoload -U compinit && compinit'
           state: present
 
@@ -94,7 +93,7 @@
       - name: Installing Vagrant 2.2.15
         become: true
         unarchive:
-          src: 'https://releases.hashicorp.com/vagrant/2.2.15/vagrant_2.2.15_linux_amd64.zipp'
+          src: 'https://releases.hashicorp.com/vagrant/2.2.15/vagrant_2.2.15_linux_amd64.zip'
           dest: /usr/local/bin
           remote_src: yes
 
@@ -103,26 +102,38 @@
         become: true
         unarchive:
           src: 'https://releases.hashicorp.com/terraform/0.12.30/terraform_0.12.30_linux_amd64.zip'
-          dest: /usr/local/bin/terraform12
+          dest: /usr/local/bin
           remote_src: yes
+      - name: Renaming terraform12 binary
+        become: true
+        command: mv /usr/local/bin/terraform /usr/local/bin/terraform12
       - name: Installing Terraform 0.13.6
         become: true
         unarchive:
           src: 'https://releases.hashicorp.com/terraform/0.13.6/terraform_0.13.6_linux_amd64.zip'
-          dest: /usr/local/bin/terraform13
+          dest: /usr/local/bin
           remote_src: yes
+      - name: Renaming terraform13 binary
+        become: true
+        command: mv /usr/local/bin/terraform /usr/local/bin/terraform13
       - name: Installing Terraform 0.14.10
         become: true
         unarchive:
           src: 'https://releases.hashicorp.com/terraform/0.14.10/terraform_0.14.10_linux_amd64.zip'
-          dest: /usr/local/bin/terraform14
+          dest: /usr/local/bin
           remote_src: yes
+      - name: Renaming terraform14 binary
+        become: true
+        command: mv /usr/local/bin/terraform /usr/local/bin/terraform14
       - name: Installing Terraform 0.15.0
         become: true
         unarchive:
           src: 'https://releases.hashicorp.com/terraform/0.15.0/terraform_0.15.0_linux_amd64.zip'
-          dest: /usr/local/bin/terraform15
+          dest: /usr/local/bin
           remote_src: yes
+      - name: Renaming terraform15 binary
+        become: true
+        command: mv /usr/local/bin/terraform /usr/local/bin/terraform15
 
     - block:
       - name: Installing Vault 1.7.1
@@ -189,7 +200,6 @@
           cmd: code --install-extension '{{ item }}' 
         loop: 
           - ms-python.python
-          - puppet.puppet-vscode
           - ms-azuretools.vscode-docker
           - bbenoist.vagrant
           - hashicorp.terraform
@@ -216,7 +226,7 @@
       - name: Adding existing user to group Docker
         become: yes
         user: 
-          name: '{{ ansible_user }}'
+          name: '{{ ansible_user_id }}'
           groups: docker 
           append: yes
       - name: Install Docker Machine Bash Completion
@@ -240,7 +250,7 @@
           remote_src: yes
       - name: Install Docker-Compose and Docker Machine Zsh Completion
         lineinfile:
-          path: /home/{{ ansible_user }}/.zshrc
+          path: /home/{{ ansible_user_id }}/.zshrc
           regexp: '^plugins='
           line: 'plugins=(git docker docker-compose)'
         
@@ -269,7 +279,7 @@
       - name: Creating ZSH Completion  
         file:
           src: '/opt/kubectx/completion/{{ item }}'
-          dest: '/home/{{ ansible_user }}/.oh-my-zsh/completions/_{{ item }}'
+          dest: '/home/{{ ansible_user_id }}/.oh-my-zsh/completions/_{{ item }}'
           state: link
         with_items:
           - kubectx.zsh
