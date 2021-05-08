@@ -12,7 +12,7 @@ ___
 
 1. Install Ansible
 ```bash
-sudo apt update && sudo apt install ansible unzip -y
+sudo apt update && sudo apt install ansible unzip git -y
 ```
 2. Clone this repository
 ```bash
