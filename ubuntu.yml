@@ -300,6 +300,8 @@
 #  - OBS-STUDIO - Screen Recorder and Casting Software 
 #  - Brave Browser - Secure web browser
 #  - Ulauncher - Application Launcher
+#  - Discord - Application Chat
+#  - Sublime Text - Text Editor 
 
     - block:
       - name: Adding Peek Repository
@@ -337,7 +339,6 @@
         become: true
         apt:
           name: brave-browser
-
     - block:
       - name: Adding Ulauncher Repository
         become: true
@@ -347,3 +348,13 @@
         become: true
         apt:
           name: ulauncher
+    - block:
+      - name: Install Discord
+        become: true
+        apt:
+          deb: https://discord.com/api/download?platform=linux&format=deb
+    - block:
+      - name: Install Sublime Text
+        become: true
+        apt:
+          deb: https://download.sublimetext.com/sublime-text_build-3211_amd64.deb
