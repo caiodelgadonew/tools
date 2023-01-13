@@ -1,0 +1,6 @@
+---
+terraform:
+  terraform_version: 1.3.7
+  terragrunt_version: 0.42.7
+  tflint_version: 0.44.1
+  checkov_version: 2.2.257

@@ -1,0 +1,17 @@
+- name: Run multiple playbooks
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - vars/vars.yml
+  tasks:
+    - name: Install basic tools
+      import_playbook: basic-ubuntu.yml
+    - name: Configure terminal
+      import_playbook: termina.yml
+    - name: Configure Terraform
+      import_playbook: terraform.yml
+    - name: Configure Docker
+      import_playbook: docker.yml
+    - name: Configure K8s and yours tools
+      import_playbook: k8s.yml

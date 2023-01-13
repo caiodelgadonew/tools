@@ -2,7 +2,7 @@
 
 This repository contains scripts to automate and speedup the workflow and preparation for my machine.
 
-> **_Disclaimer_** :  
+> **_Disclaimer_** :
 > Those scripts are ubuntu related with major version 18+, for other distributions you'll need to adapt it
 ___
 

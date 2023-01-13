@@ -1,0 +1,37 @@
+---
+- name: Install kubectl, kubectx, kind, and minikube on Ubuntu 22.04
+  hosts: localhost
+  become: true
+  vars:
+    apt_update: true
+
+  tasks:
+  - name: Install kubectl
+    apt:
+      name: kubectl
+      state: present
+
+  - name: Install kubectx and kubens
+    shell: |
+      git clone https://github.com/ahmetb/kubectx /opt/kubectx
+      ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+      ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+
+  - name: Install kind
+    shell: |
+      curl -Lo kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-$(uname)-amd64
+      chmod +x kind
+      sudo mv kind /usr/local/bin/
+
+  - name: Install minikube
+    shell: |
+      curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.19.0/minikube-linux-amd64
+      chmod +x minikube
+      sudo mv minikube /usr/local/bin/
+
+  - name: Installing Stern 1.11.0
+    become: true
+    get_url:
+      url: 'https://github.com/wercker/stern/releases/download/1.11.0/stern_linux_amd64'
+      dest: /usr/local/bin/stern
+      mode: 755

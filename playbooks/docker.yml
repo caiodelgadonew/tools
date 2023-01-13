@@ -1,0 +1,37 @@
+---
+- name: Install and configure Docker on Ubuntu 22
+  hosts: localhost
+  connection: local
+  become: true
+  vars:
+    apt_update: true
+
+  tasks:
+  - name: Add the Docker repository
+    apt_repository:
+      repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable'
+      state: present
+
+  - name: Install Docker package
+    package:
+      name: docker-ce
+      state: present
+
+  - name: Add user to docker group
+    user:
+      name: "{{ ansible_user }}"
+      groups: docker
+      append: true
+
+  - name: Start and enable Docker service
+    service:
+      name: docker
+      state: started
+      enabled: true
+
+  - name: Install Docker Compose
+    become: true
+    shell: |
+      sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      sudo chmod +x /usr/local/bin/docker-compose
+

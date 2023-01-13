@@ -1,0 +1,40 @@
+---
+- name: Install and configure Terraform and related tools on Ubuntu
+  hosts: localhost
+  become: true
+  vars:
+    apt_update: true
+
+  tasks:
+  - name: Install unzip
+    apt:
+      name: unzip
+      state: present
+
+  - name: Download and install Terraform
+    command: curl -o /usr/local/bin/terraform.zip https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip
+    unarchive:
+      src: /usr/local/bin/terraform.zip
+      dest: /usr/local/bin/
+      remote_src: true
+    become: true
+
+  - name: Download and install Terragrunt
+    command: curl -o /usr/local/bin/terragrunt.zip https://github.com/gruntwork-io/terragrunt/releases/download/v{{ terragrunt_version }}/terragrunt_linux_amd64
+    unarchive:
+      src: /usr/local/bin/terragrunt.zip
+      dest: /usr/local/bin/
+      remote_src: true
+    become: true
+
+  - name: Install tflint
+    shell: |
+      curl -L https://github.com/terraform-linters/tflint/releases/download/v{{ tflint_version }}/tflint_linux_amd64.zip -o tflint.zip
+      unzip tflint.zip
+      sudo mv tflint /usr/local/bin/
+
+  - name: Install checkov
+    shell: |
+      curl -L https://github.com/bridgecrewio/checkov/archive/refs/tags/{{ checkov_version }} -o checkov.zip
+      unzip checkov.zip
+      sudo mv

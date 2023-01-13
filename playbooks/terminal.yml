@@ -1,0 +1,49 @@
+---
+- name: Install and configure Oh My Zsh on Ubuntu 22.04
+  hosts: localhost
+  become: true
+  vars:
+    apt_update: true
+
+  tasks:
+  - name: Install Zsh
+    apt:
+      name: zsh
+      state: present
+
+  - name: Install Oh My Zsh
+    shell: |
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+  - name: Install ZSH Completation
+    shell: |
+      git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions
+
+  - name: Install Auto-suggestion-zsh
+    shell: |
+      git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+  - name: Install agnoster theme
+    shell: |
+      git clone https://github.com/agnoster/agnoster-zsh-theme.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/agnoster
+      sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnoster"/g' ~/.zshrc
+
+  - name: Install ZSH completion folder
+    shell: |
+      git clone https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions
+
+  - name: Install Syntax Highlighting
+    shell: |
+      git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+  - name: Change default shell to Zsh
+    shell: |
+      chsh -s $(which zsh)
+
+  - name: Auto load compinit
+    shell: |
+      echo "autoload -U compinit; compinit" >> ~/.zshrc
+
+  - name: Validate Installation
+    shell: |
+      zsh --version

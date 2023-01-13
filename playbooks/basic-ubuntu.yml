@@ -1,0 +1,71 @@
+---
+- name: Install tools on Ubuntu 22
+  hosts: localhost
+  become: true
+  vars:
+    apt_update: true
+  tasks:
+  - name: Check if tools are installed
+    apt:
+      name:
+        - vim
+        - htop
+        - curl
+        - wget
+        - ncdu
+        - tree
+        - apt-transport-https
+        - ca-certificates
+        - gnupg
+        - python3-pip
+        - make
+        - git
+        - bash-completion
+        - gnupg-agent
+        - zsh
+        - flameshot
+        - fonts-hack
+        - terminator
+        - virtualbox
+        - mlocate
+        - krita
+        - jq
+        - mtr
+      state: present
+      update_cache: yes
+    register: tool_check
+
+  - name: Install missing tools
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items: "{{ tool_check.results }}"
+    when: item.state == 'missing'
+  - name: Add Google Chrome repository
+    apt_repository:
+      repo: 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main'
+      state: present
+      update_cache: yes
+  - name: Install Google Chrome
+    apt:
+      name: google-chrome-stable
+      state: present
+
+  - name: Download Visual Studio Code package
+    command: wget -qO - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+    become: true
+
+  - name: Add Visual Studio Code package to apt
+    apt_key:
+      url: /root/packages.microsoft.gpg
+      state: present
+
+  - name: Add Visual Studio Code repository
+    apt_repository:
+      repo: 'deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main'
+      state: present
+      update_cache: yes
+  - name: Install Visual Studio Code
+    apt:
+      name: code
+      state: present
